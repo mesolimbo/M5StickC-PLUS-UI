@@ -1,0 +1,14 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+adafruit-ampy = "==1.1.0"
+pyserial = "==3.5"
+esptool = "==5.0.2"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
