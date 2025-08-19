@@ -124,7 +124,7 @@ pipenv run ampy -p COM4 run example.py
 
 ### Automated Deployment
 ```bash
-python deploy.py  # Uses settings in deploy.py
+python scripts/deploy.py  # Uses settings in deploy.py
 ```
 
 ## Performance

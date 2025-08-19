@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e678bd52caf02bf3d3bcd6325e0182cdf91451a10368cda72b59c32bb801a919"
+            "sha256": "1b5d2a029d6947aa0f46ae605acb3863984a3e43f2ad4b0e4a2583e73249ba5d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -457,5 +457,31 @@
             "version": "==4.14.1"
         }
     },
-    "develop": {}
+    "develop": {
+        "mpremote": {
+            "hashes": [
+                "sha256:7f347318fb6d3bb8f89401d399a05efba39b51c74f747cebe92d3c6a9a4ee0b4",
+                "sha256:daed9b795fdf98edb0c9c4f7f892bf66f075ec5e728bdcc4ab0915abf23d5d17"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.4'",
+            "version": "==1.26.0"
+        },
+        "platformdirs": {
+            "hashes": [
+                "sha256:3d512d96e16bcb959a814c9f348431070822a6496326a4be0911c40b5a74c2bc",
+                "sha256:ff7059bb7eb1179e2685604f4aaf157cfd9535242bd23742eadc3c13542139b4"
+            ],
+            "markers": "python_version >= '3.9'",
+            "version": "==4.3.8"
+        },
+        "pyserial": {
+            "hashes": [
+                "sha256:3c77e014170dfffbd816e6ffc205e9842efb10be9f58ec16d3e8675b4925cddb",
+                "sha256:c4451db6ba391ca6ca299fb3ec7bae67a5c55dde170964c7a14ceefec02f2cf0"
+            ],
+            "index": "pypi",
+            "version": "==3.5"
+        }
+    }
 }

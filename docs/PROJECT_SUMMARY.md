@@ -21,23 +21,23 @@ Complete MicroPython graphics library for M5StickC-PLUS with working display, co
 ## Files Structure
 ```
 Core Library:
-├── m5graphics.py      # Main graphics library
-├── st7789.py         # ST7789 display driver  
-├── bmp_loader.py     # BMP image loading
-├── example.py        # Complete demonstration
-└── boot.py           # Auto-run example on startup
+├── src/m5graphics.py      # Main graphics library
+├── src/st7789.py         # ST7789 display driver  
+├── src/bmp_loader.py     # BMP image loading
+├── src/example.py        # Complete demonstration
+└── src/boot.py           # Auto-run example on startup
 
 Test Images:
-├── small_test.bmp    # 64×64 test image (12KB)
-├── m5_logo.bmp       # 135×240 M5 logo (98KB)
-└── test_pattern.bmp  # 135×240 TV test pattern (98KB)
-
+├── images/small_test.bmp    # 64×64 test image (12KB)
+├── images/m5_logo.bmp       # 135×240 M5 logo (98KB)
+└── images/test_pattern.bmp  # 135×240 TV test pattern (98KB)
+images/
 Tools & Docs:
-├── deploy.py         # Windows deployment automation
-├── setup.py          # Setup utility
+├── scripts/deploy.py         # Windows deployment automation
+├── scripts/setup.py          # Setup utility
 ├── README.md         # Complete documentation
-├── DEPLOYMENT.md     # Windows deployment guide
-├── CHANGELOG.md      # Version history
+├── docs/DEPLOYMENT.md     # Windows deployment guide
+├── docs/CHANGELOG.md      # Version history
 └── docs/             # Original specifications
 ```
 

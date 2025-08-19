@@ -9,6 +9,7 @@ pyserial = "==3.5"
 esptool = "==5.0.2"
 
 [dev-packages]
+mpremote = "==1.26.0"
 
 [requires]
 python_version = "3.12"
