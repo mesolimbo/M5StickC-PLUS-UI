@@ -7,7 +7,7 @@ A complete MicroPython graphics library for the M5StickC-PLUS device featuring e
 - **ST7789 Display Driver**: Native support for 135×240 pixel display with proper offset correction
 - **Framebuffer Management**: Flicker-free rendering with double-buffering
 - **Drawing Primitives**: Lines, rectangles, circles, pixels, and text
-- **BMP Image Loading**: Memory-efficient 24-bit BMP decoder (8-bit not supported)
+- **BMP Image Loading**: Memory-efficient 24-bit BMP decoder (8-bit supported as well)
 - **Color Management**: RGB565 with blending and manipulation utilities
 - **Memory Optimized**: ~64KB framebuffer, designed for ESP32 constraints
 

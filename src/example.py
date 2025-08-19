@@ -85,34 +85,52 @@ def main():
     graphics.clear(BLACK)
     graphics.text("BMP Test", 35, 10, WHITE)
     
-    # Try to load test images
-    if graphics.load_bmp("small_test.bmp", 35, 50):
-        print("Small BMP loaded!")
-        graphics.text("Small BMP OK", 15, 30, GREEN)
-        graphics.show()
-        time.sleep_ms(2000)
+    # Test different BMP formats
+    bmp_files = [
+        ("icon_8bit.bmp", "8-bit icon"),
+        ("photo_24bit.bmp", "24-bit photo"),
+        ("small_test.bmp", "Test image"),
+        ("m5_logo.bmp", "M5 logo")
+    ]
+    
+    loaded_any = False
+    for filename, description in bmp_files:
+        print(f"Trying to load {filename} ({description})...")
         
-        # Try full-size image
-        if graphics.load_bmp("m5_logo.bmp", 0, 0):
-            print("Full-size BMP loaded!")
+        # Get image info first
+        info = graphics.get_bmp_info(filename)
+        if info:
+            print(f"  {info['width']}x{info['height']}, {info['bits_per_pixel']}-bit")
+            if info.get('palette_colors', 0) > 0:
+                print(f"  Palette: {info['palette_colors']} colors")
+        
+        # Position image based on size - center small images, top-left for large ones
+        if info and info['width'] <= 64:
+            # Small image - center it
+            x_pos = (135 - info['width']) // 2
+            y_pos = (240 - info['height']) // 2
+        else:
+            # Large image - top-left corner
+            x_pos = 0
+            y_pos = 0
+        
+        if graphics.load_bmp(filename, x_pos, y_pos):
+            print(f"  {description} loaded successfully!")
+            graphics.text(f"{info['bits_per_pixel']}-bit BMP", 10, 30, GREEN)
+            graphics.text("Loaded OK", 20, 200, GREEN)
             graphics.show()
-            time.sleep_ms(10000)
-    else:
+            time.sleep_ms(2000)
+            loaded_any = True
+            graphics.clear(BLACK)
+            graphics.text("BMP Test", 35, 10, WHITE)
+    
+    if not loaded_any:
         print("No BMP images found")
         graphics.text("No BMP files", 20, 50, YELLOW)
+        graphics.text("8-bit & 24-bit", 15, 70, CYAN)
+        graphics.text("supported!", 25, 90, CYAN)
         graphics.show()
-        time.sleep_ms(1000)
-    
-    # # Final screen
-    # graphics.clear(GREEN)
-    # graphics.text("GRAPHICS", 25, 80, BLACK)
-    # graphics.text("LIBRARY", 30, 100, BLACK)
-    # graphics.text("READY!", 35, 120, BLACK)
-    #
-    # # Draw border
-    # graphics.rect(0, 0, 135, 240, BLACK)
-    #
-    # graphics.show()
+        time.sleep_ms(2000)
     
     print("Example completed successfully!")
     print("Graphics library is ready for use!")
