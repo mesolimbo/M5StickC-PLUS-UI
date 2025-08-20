@@ -35,8 +35,13 @@ class DreidlGame:
             print("Failed to initialize display!")
             return False
         
+        # Clear screen to black immediately to avoid random noise
+        self.graphics.clear(0x0000)  # Black in RGB565
+        self.graphics.show()
+        
         print("Display initialized successfully")
         return True
+    
     
     def detect_button_press(self):
         """Detect button A press to spin dreidel"""
@@ -73,57 +78,56 @@ class DreidlGame:
         return result
     
     def spin_with_music(self):
-        """Start spinning animation immediately, then play music simultaneously"""
+        """Start spinning animation and music simultaneously"""
         try:
             import _thread
             
-            # Start spinning animation immediately
-            # Start music in background thread at the same time
+            # Start spinning animation immediately (first frame)
+            self.graphics.load_bmp("left.bmp", 0, 0)
+            self.graphics.load_bmp("base.bmp", 0, 164)
+            self.graphics.show()
+            
+            # Now start music thread and continue animation loop
             _thread.start_new_thread(self.play_dreidel_song, ())
             
-            # Show spinning animation for the exact duration of the song
-            # Precise timing calculation at 250ms per note:
+            # Continue spinning animation for the exact duration of the song
+            # Precise timing calculation:
             # GGEGEGE (7 notes) + EGGFED (6 notes) + DFDFDFD (7 notes) + DGFEDC (6 notes) = 26 notes  
             # 26 notes * (250ms + 50ms pause) = 7800ms
             # + 3 phrase pauses * 200ms = 600ms
-            # + startup 100ms + ending 100ms = 200ms
-            # Total: ~8600ms - match exactly
-            self.show_spinning_animation_timed(8600)  # Exact music duration
+            # + startup time ~100ms + ending time ~100ms = 200ms
+            # Total: 8600ms - reduced to end exactly with music
+            self.continue_spinning_animation(7800)  # Match music timing exactly
             
         except:
             # Fallback: simpler approach without threading
             print("Using fallback music/animation...")
             self.play_music_with_simple_animation()
     
-    def show_spinning_animation_timed(self, duration_ms):
-        """Show spinning animation for a specific duration using bitmap alternation"""
+    def continue_spinning_animation(self, duration_ms):
+        """Continue spinning animation for a specific duration (first frame already shown)"""
         start_time = time.ticks_ms()
-        left_turn = True
-        
-        # Start spinning immediately - show first frame right away
-        self.graphics.load_bmp("left.bmp", 0, 0)  # Start with left image
-        self.graphics.load_bmp("base.bmp", 0, 164)  # Base at bottom
-        self.graphics.show()
+        left_turn = False  # Start with right since we already showed left
         
         while time.ticks_diff(time.ticks_ms(), start_time) < duration_ms:
             left_turn = not left_turn  # Toggle for next frame
             
-            # Alternate between left and right dreidel images
+            # Fast switching between left and right
             if left_turn:
                 self.graphics.load_bmp("left.bmp", 0, 0)
             else:
                 self.graphics.load_bmp("right.bmp", 0, 0)
             
             self.graphics.show()
-            time.sleep_ms(150)  # Faster spin animation
+            time.sleep_ms(80)  # Fast animation synchronized with music
     
     def play_music_with_simple_animation(self):
-        """Fallback: interleave music and animation using bitmaps"""
+        """Fallback: interleave music and animation"""
         phrases = ["GGEGEGE", "EGGFED", "DFDFDFD", "DGFEDC"]
         
-        # Start spinning immediately - show first frame right away
-        self.graphics.load_bmp("left.bmp", 0, 0)  # Start with left image
-        self.graphics.load_bmp("base.bmp", 0, 164)  # Base at bottom
+        # Start spinning immediately
+        self.graphics.load_bmp("left.bmp", 0, 0)
+        self.graphics.load_bmp("base.bmp", 0, 164)
         self.graphics.show()
         
         left_turn = True
@@ -133,7 +137,7 @@ class DreidlGame:
             for note_idx, note in enumerate(phrase):
                 left_turn = not left_turn  # Toggle for next frame
                 
-                # Alternate between left and right dreidel images
+                # Fast switching between left and right
                 if left_turn:
                     self.graphics.load_bmp("left.bmp", 0, 0)
                 else:
@@ -161,25 +165,16 @@ class DreidlGame:
     
     
     def show_welcome_screen(self):
-        """Show welcome screen with blinking prompt"""
+        """Show welcome screen with immediate button responsiveness"""
         # Show intro image at top (135x164)
         self.graphics.load_bmp("intro.bmp", 0, 0)
         
-        # Blinking prompt animation at bottom - faster
-        for blink in range(6):  # Blink 3 times
-            # Show base image
-            self.graphics.load_bmp("base.bmp", 0, 164)
-            self.graphics.show()
-            time.sleep_ms(250)  # Faster blinking
-            
-            # Show prompt image
-            self.graphics.load_bmp("prompt.bmp", 0, 164)
-            self.graphics.show()
-            time.sleep_ms(250)  # Faster blinking
-        
-        # End with prompt visible
+        # Show initial prompt
         self.graphics.load_bmp("prompt.bmp", 0, 164)
         self.graphics.show()
+        
+        # Very brief display before checking for button - no blocking blinking
+        time.sleep_ms(500)
     
     def play_dreidel_song(self):
         """Play the dreidel song"""
@@ -199,10 +194,6 @@ class DreidlGame:
         
         self.show_welcome_screen()
         
-        # Track when to do periodic blinking
-        last_blink_time = time.ticks_ms()
-        blink_state = True  # True = prompt visible, False = base visible
-        
         try:
             while True:
                 if self.detect_button_press():
@@ -214,27 +205,8 @@ class DreidlGame:
                     # Show result after music/spinning completes
                     self.show_result(result)
                     print(f"Result: {result['name']} - {result['meaning']}")
-                    
-                    # Reset blink timing after showing result
-                    last_blink_time = time.ticks_ms()
-                    blink_state = True
-                else:
-                    # Periodic blinking when idle (every 2 seconds)
-                    current_time = time.ticks_ms()
-                    if time.ticks_diff(current_time, last_blink_time) > 2000:
-                        # Quick blink to show activity
-                        if blink_state:
-                            # Show base briefly
-                            self.graphics.load_bmp("base.bmp", 0, 164)
-                            self.graphics.show()
-                            time.sleep_ms(200)
-                            # Back to prompt
-                            self.graphics.load_bmp("prompt.bmp", 0, 164)
-                            self.graphics.show()
-                        
-                        last_blink_time = current_time
                 
-                time.sleep_ms(20)  # Smaller delay for better button responsiveness
+                time.sleep_ms(20)  # Small delay for better button responsiveness
                 
         except KeyboardInterrupt:
             print("Game stopped by user")
