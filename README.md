@@ -1,5 +1,7 @@
 # M5StickC-PLUS Graphics Library
 
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/gMZkxidlqgk/0.jpg)](https://www.youtube.com/watch?v=gMZkxidlqgk)
+
 A complete MicroPython graphics library for the M5StickC-PLUS device featuring efficient framebuffer management, BMP image loading, and comprehensive drawing primitives with proper color handling.
 
 ## Features
